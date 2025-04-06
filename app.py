@@ -21,6 +21,7 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import io
 import logging # Import logging
+from urllib.error import URLError
 
 # --- Setup Logging ---
 log_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
@@ -51,18 +52,40 @@ except Exception as e: logger.error(f"Error loading .env file: {e}", exc_info=Tr
 
 # --- NLTK VADER & Stopwords Download ---
 if 'vader_downloaded' not in st.session_state:
-    try: nltk.data.find('sentiment/vader_lexicon.zip'); st.session_state.vader_downloaded = True; logger.info("VADER lexicon found.")
-    except (LookupError, nltk.downloader.DownloadError):
-        logger.info("Attempting VADER download...");
-        try: nltk.download('vader_lexicon', quiet=True); st.session_state.vader_downloaded = True; logger.info("VADER downloaded.")
-        except Exception as e: logger.error(f"Failed VADER download: {e}", exc_info=True); st.session_state.vader_downloaded = False
-if 'stopwords_downloaded' not in st.session_state:
-     try: nltk.data.find('corpora/stopwords'); st.session_state.stopwords_downloaded = True; logger.info("Stopwords found.")
-     except LookupError:
-          logger.info("Attempting Stopwords download...");
-          try: nltk.download('stopwords', quiet=True); st.session_state.stopwords_downloaded = True; logger.info("Stopwords downloaded.")
-          except Exception as e: logger.error(f"Failed stopwords download: {e}"); st.session_state.stopwords_downloaded = False
+    try:
+        nltk.data.find('sentiment/vader_lexicon.zip')
+        st.session_state.vader_downloaded = True
+        logger.info("VADER lexicon found.")
+    except LookupError: # This exception is standard and should be fine
+        logger.info("Attempting VADER download...")
+        try:
+            nltk.download('vader_lexicon', quiet=True)
+            st.session_state.vader_downloaded = True
+            logger.info("VADER downloaded successfully.")
+        # --- MODIFIED EXCEPTION HANDLING FOR DOWNLOAD ---
+        except (URLError, OSError, Exception) as e: # Catch network, file system, and other download errors
+            logger.error(f"Failed VADER download: Type {type(e).__name__} - {e}", exc_info=True)
+            st.session_state.vader_downloaded = False
+            # Optionally show an error in the UI if download fails critically
+            # st.error("Failed to download required NLTK data (VADER). Sentiment analysis may be limited.")
 
+if 'stopwords_downloaded' not in st.session_state:
+    try:
+        nltk.data.find('corpora/stopwords')
+        st.session_state.stopwords_downloaded = True
+        logger.info("Stopwords found.")
+    except LookupError:
+        logger.info("Attempting Stopwords download...")
+        try:
+            nltk.download('stopwords', quiet=True)
+            st.session_state.stopwords_downloaded = True
+            logger.info("Stopwords downloaded successfully.")
+        # --- MODIFIED EXCEPTION HANDLING FOR DOWNLOAD ---
+        except (URLError, OSError, Exception) as e: # Catch network, file system, and other download errors
+            logger.error(f"Failed stopwords download: Type {type(e).__name__} - {e}", exc_info=True)
+            st.session_state.stopwords_downloaded = False
+            # Optionally show an error in the UI if download fails critically
+            # st.error("Failed to download required NLTK data (stopwords). Word Clouds may be affected.")
 
 # --- Constants ---
 APP_NAME = "RedditVOCAnalyzer" # Define your app's base name
