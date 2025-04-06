@@ -194,7 +194,7 @@ def cached_search_subreddits(praw_details: Tuple[str, str, str], keyword: str) -
 def fetch_posts_requests(subreddit_name: str, limit: int, sort: str) -> Optional[pd.DataFrame]:
     # ... (keep as is) ...
     logger.info(f"CACHE MISS/EXPIRED: Public post fetch: r/{subreddit_name}, sort={sort}, limit={limit}")
-    url = f"https://old.reddit.com/r/{subreddit_name}/{sort}.json?limit={limit}&t=all"
+    url = f"https://reddit.com/r/{subreddit_name}/{sort}.json?limit={limit}&t=all"
     headers = {'User-Agent': REQUESTS_USER_AGENT}
     try:
         response = requests.get(url, headers=headers, timeout=20); response.raise_for_status()
@@ -268,7 +268,7 @@ def fetch_comments_requests(subreddit_name: str, post_id: str, limit: int) -> Op
     # ... (keep as is) ...
     logger.info(f"CACHE MISS/EXPIRED: Public comment fetch: post {post_id}, r/{subreddit_name}, limit={limit}")
     fetch_limit = limit * 2 if limit < 100 else limit + 100
-    url = f"https://old.reddit.com/r/{subreddit_name}/comments/{post_id}.json?limit={fetch_limit}&depth=1&sort=top"
+    url = f"https://reddit.com/r/{subreddit_name}/comments/{post_id}.json?limit={fetch_limit}&depth=1&sort=top"
     headers = {'User-Agent': REQUESTS_USER_AGENT}
     try:
         response = requests.get(url, headers=headers, timeout=20); response.raise_for_status()
