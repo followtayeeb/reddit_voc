@@ -141,7 +141,6 @@ The application employs a hybrid approach:
 
 ## License
 
-Currently, this repository is private. If made public in the future, an appropriate open-source license (e.g., MIT) will be added.
 
 *(If you make the repo public later, uncomment the MIT license badge at the top and add a `LICENSE` file with the MIT license text.)*
 
