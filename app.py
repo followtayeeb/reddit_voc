@@ -95,8 +95,8 @@ REQUESTS_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537
 COMMENT_FETCH_DELAY = 0.3
 CACHE_TTL_SECONDS = 3600
 GROQ_TEXT_MODELS = [
-    "gemma2-9b-it", "llama-3.3-70b-versatile", "llama-3.1-8b-instant",
-    "llama3-70b-8192", "llama3-8b-8192",
+    "qwen/qwen3-32b", "gemma2-9b-it", "llama-3.3-70b-versatile", "llama-3.1-8b-instant",
+    "llama3-70b-8192", "llama3-8b-8192", 
     # Preview Models
     "meta-llama/llama-4-scout-17b-16e-instruct", "meta-llama/llama-4-maverick-17b-128e-instruct",
     "qwen-qwq-32b", "mistral-saba-24b", "qwen-2.5-coder-32b", "qwen-2.5-32b",
